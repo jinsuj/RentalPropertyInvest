@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class DBConnection {
 
@@ -35,12 +36,17 @@ public class DBConnection {
         return false;
     }
 
-    public String getHouseAddress(int houseID) {
+    public ArrayList<String> getHouseInfo(int houseID) {
         try {
             String SQL = "SELECT * FROM houseinfo WHERE houseid = " + houseID;
             rs = st.executeQuery(SQL);
-        if (rs.next()) {
-                return rs.getString("address");
+            if (rs.next()) {
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(0, rs.getString("address"));
+                list.add(1, rs.getString("vacant"));
+                list.add(2, String.valueOf(rs.getDouble("rentAmount")));
+                list.add(3, rs.getString("housetype"));
+                return list;
             }
         } catch (Exception e) {
             System.out.println("Error on searching houseID in database" + e.getMessage());
