@@ -1,7 +1,7 @@
 package JDBCConnector;
 
+import Property.Property;
 import User.User;
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,13 +9,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class DBConnection {
-
+public class DBConnectionForTest {
     private Connection con;
     private Statement st;
     private ResultSet rs;
 
-    public DBConnection() {
+    public DBConnectionForTest() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/rentalProperty", "root", "wjd3289");
@@ -25,9 +24,30 @@ public class DBConnection {
         }
     }
 
+    public void dropTable() {
+        try {
+            String SQL = "DELETE FROM testhouseinfo";
+            st.executeUpdate(SQL);
+            SQL = "DELETE FROM testuser";
+            st.executeUpdate(SQL);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void createHouse(Property house, int userID) {
+        try {
+            String SQL = "INSERT INTO testhouseinfo values ('" + house.getAddress() + "', '" + house.getPropertyType() + "', "
+                    + house.getRentAmount() + ", '" + house.getVacant() + "', " + userID + ");";
+            st.executeUpdate(SQL);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public boolean isHouseID(int houseID) {
         try {
-            String SQL = "SELECT * FROM houseinfo WHERE houseid = " + houseID;
+            String SQL = "SELECT * FROM testhouseinfo WHERE houseid = " + houseID;
             rs = st.executeQuery(SQL);
             if (rs.next()) {
                 return true;
@@ -41,7 +61,7 @@ public class DBConnection {
 
     public ArrayList<String> getHouseInfo(int houseID) {
         try {
-            String SQL = "SELECT * FROM houseinfo WHERE houseid = " + houseID;
+            String SQL = "SELECT * FROM testhouseinfo WHERE houseid = " + houseID;
             rs = st.executeQuery(SQL);
             if (rs.next()) {
                 ArrayList<String> list = new ArrayList<String>();
@@ -59,7 +79,7 @@ public class DBConnection {
 
     public boolean getLoginInfo(String username, String password) {
         try {
-            String SQL = "SELECT * FROM user WHERE username = '" + username + "' and password = '" + password + "'";
+            String SQL = "SELECT * FROM testuser WHERE username = '" + username + "' and password = '" + password + "'";
             rs = st.executeQuery(SQL);
             if (rs.next()) {
                 return true;
@@ -72,7 +92,7 @@ public class DBConnection {
 
     public boolean checkUser(String username) {
         try {
-            String SQL = "SELECT * FROM user WHERE username = '" + username + "'";
+            String SQL = "SELECT * FROM testuser WHERE username = '" + username + "'";
             rs = st.executeQuery(SQL);
             if (rs.next()) {
                 System.out.println(rs.getString("username"));
@@ -91,11 +111,20 @@ public class DBConnection {
                 return false;
             }
             User user = new User(username, password);
-            String SQL = "INSERT into user values ( '" + username + "', '" + password + "')";
+            String SQL = "INSERT into testuser values ( '" + username + "', '" + password + "')";
             st.executeUpdate(SQL);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return true;
+    }
+
+    public void removeUser(String username) {
+        try {
+            String SQL = "DELETE FROM testuser WHERE username = '" + username + "'";
+            st.executeUpdate(SQL);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
