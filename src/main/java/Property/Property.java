@@ -14,35 +14,35 @@ public class Property {
         setPropertyType(propertyType);
     }
 
-    public static String getAddress() {
+    public String getAddress() {
         return address;
     }
 
-    public static String getVacant() {
+    public String getVacant() {
         return vacant;
     }
 
-    public static double getRentAmount() {
+    public double getRentAmount() {
         return rentAmount;
     }
 
-    public static String getPropertyType() {
+    public String getPropertyType() {
         return propertyType;
     }
 
-    public static void setAddress(String address) {
+    public void setAddress(String address) {
         Property.address = address;
     }
 
-    public static void setVacant(String vacant) {
+    public void setVacant(String vacant) {
         Property.vacant = vacant;
     }
 
-    public static void setRentAmount(double rentAmount) {
+    public void setRentAmount(double rentAmount) {
         Property.rentAmount = rentAmount;
     }
 
-    public static void setPropertyType(String propertyType) {
+    public void setPropertyType(String propertyType) {
         Property.propertyType = propertyType;
     }
 }
