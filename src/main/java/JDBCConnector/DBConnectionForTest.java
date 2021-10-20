@@ -17,7 +17,7 @@ public class DBConnectionForTest {
     public DBConnectionForTest() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/rentalProperty", "root", "wjd3289");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/rentalProperty", "root", "");
             st = con.createStatement();
         } catch (Exception e) {
             System.out.println("Can't connect to database, " + e.getMessage());
