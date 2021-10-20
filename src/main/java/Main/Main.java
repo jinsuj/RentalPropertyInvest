@@ -13,11 +13,11 @@ public class Main {
         String username = scan.next();
         System.out.println("What's your password?");
         String password = scan.next();
-        boolean loginStatus = conn.getLoginInfo(username, password);
+/*        boolean loginStatus = conn.getLoginInfo(username, password);
         if (loginStatus) {
             System.out.println("success");
         } else {
             System.out.println("failed");
-        }
+        }*/
     }
 }
