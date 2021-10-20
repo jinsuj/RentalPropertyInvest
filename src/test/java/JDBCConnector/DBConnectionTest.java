@@ -1,40 +1,49 @@
 package JDBCConnector;
 
+import Property.Property;
+import User.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DBConnectionTest {
 
     DBConnectionForTest conn = new DBConnectionForTest();
 
     @Test
-    public void testIsHouseID() {
-        conn.createTables();
-        boolean flag = conn.isHouseID(1);
-        assertEquals(flag, true);
+    public void testCreateUser() {
+        User user = new User("testing234", "abcd1234");
+        conn.createUser(user);
+        boolean check = conn.isEmptyUser();
+        assertEquals(check, false);
     }
 
     @Test
-    public void testIsHouseIDWithInvalidID() {
-        boolean flag = conn.isHouseID(3);
+    public void testCreateHouse() {
+        Property property = new Property("test address", "F", 3500.8, "Apartment");
+        User user = new User("testing234", "abcd1234");
+        conn.createUser(user);
+        User userReturned = conn.getLoginInfo("testing234", "abcd1234");
+        conn.createHouse(property, userReturned.getUserId());
+        boolean flag = conn.isEmptyHouse();
         assertEquals(flag, false);
     }
 
     @Test
     public void testGetHouseInfo() {
-        ArrayList<String> info = conn.getHouseInfo(2);
-        assertEquals("condo", info.get(3));
-    }
-
-    @Test
-    public void testGetUsernameInfo() {
-        boolean target = conn.getLoginInfo("testing", "abcd1234");
-        assertTrue(target);
+        Property property = new Property("test address", "F", 3500.8, "Apartment");
+        User user = new User("test2345", "abcd1234");
+        conn.createUser(user);
+        User userReturned = conn.getLoginInfo("test2345", "abcd1234");
+        conn.createHouse(property, userReturned.getUserId());
+        Property property2 = conn.getHouseInfo("test address");
+        assertEquals("Apartment", property2.getPropertyType());
     }
 
     /**
@@ -42,7 +51,9 @@ class DBConnectionTest {
      */
     @Test
     public void testCheckUser() {
-        boolean target = conn.checkUser("testing");
+        User user = new User("test2345", "abcd1234");
+        conn.createUser(user);
+        boolean target = conn.checkUser(user.getUsername());
         assertTrue(target);
     }
 
@@ -52,18 +63,7 @@ class DBConnectionTest {
         assertFalse(target);
     }
 
-    @Test
-    public void testCheckUserWithUserThatDoesNotExist() {
-        boolean target = conn.checkUser("asdlkfj");
-        assertFalse(target);
-    }
-
-    @Test
-    public void testCreateUser() {
-        boolean target = conn.createUser("testing234", "abcd1234");
-        assertTrue(target);
-    }
-
+    @AfterAll
     @Test
     public void dropTables() {
         conn.dropTable();
