@@ -69,8 +69,12 @@ public class DBConnectionForTest {
         return true;
     }
 
-    public void createUser(User user) {
+    public void createUser(User user) throws IllegalArgumentException {
         try {
+            boolean check = checkUser(user.getUsername());
+            if (check) {
+                throw new IllegalArgumentException("There's already same username");
+            }
             String SQL = "INSERT INTO testdata(username, password) VALUES ('" + user.getUsername() + "','" +  user.getPassword() +"')";
             st.executeUpdate(SQL);
         } catch (Exception e) {
